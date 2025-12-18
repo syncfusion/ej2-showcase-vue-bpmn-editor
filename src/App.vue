@@ -4,27 +4,6 @@
     <div style="display: none">
       <input type="file" id="fileupload" name="UploadFiles" />
     </div>
-
-    <ejs-contextmenu
-      id="toolcontextmenu"
-      :items="dropDownDataSources.toolMenuItems"
-      :animationSettings="dialogAnimationSettings"
-      @open="toolContextMenuOpen"
-      cssClass="toolMenu"
-      :beforeClose="arrangeMenuBeforeClose"
-      @select="menuClick"
-    ></ejs-contextmenu>
-
-    <ejs-contextmenu
-      id="arrangeContextMenu"
-      :items="dropDownDataSources.arrangeMenuItems"
-      :animationSettings="dialogAnimationSettings"
-      @open="arrangeContextMenuOpen"
-      cssClass="arrangeMenu"
-      :beforeClose="arrangeMenuBeforeClose"
-      @select="menuClick"
-    ></ejs-contextmenu>
-
     <div class="diagrambuilder-container">
       <div class="header navbar">
         <div class="db-header-container">
@@ -53,82 +32,18 @@
               class="db-diagram-name db-save-text"
             ></span>
           </div>
-          <div class="db-menu-container">
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnFileMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.fileMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                >File
-              </ejs-dropdownbutton>
+           <div className="diagram-menu-control">
+            <div class="menu-control">
+                <ejs-menu id="diagram-menu"
+                ref="menuInstanceRef"
+                cssClass='db-dropdown-menu'  
+                content="File"
+                :items='toolMenuItems'
+                 @select="menuClick($event)"
+                :beforeOpen="beforeMenuOpen"
+                 ></ejs-menu>
             </div>
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnEditMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.editMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                >Edit</ejs-dropdownbutton
-              >
             </div>
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnDesignMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.arrangeMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                target=".e-contextmenu-wrapper.arrangeMenu"
-                >Design
-              </ejs-dropdownbutton>
-            </div>
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnSelectMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.selectMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                >Select
-              </ejs-dropdownbutton>
-            </div>
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnToolMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.toolMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                target=".e-contextmenu-wrapper.toolMenu"
-                >Tool
-              </ejs-dropdownbutton>
-            </div>
-            <div class="db-menu-style">
-              <ejs-dropdownbutton
-                id="btnViewMenu"
-                cssClass="db-dropdown-menu"
-                :items="dropDownDataSources.viewMenuItems"
-                @select="menuClick"
-                :beforeOpen="arrangeMenuBeforeOpen"
-                :beforeClose="arrangeMenuBeforeClose"
-                :beforeItemRender="beforeItemRender"
-                >View
-              </ejs-dropdownbutton>
-            </div>
-          </div>
         </div>
 
         <div class="db-toolbar-editor">
@@ -169,7 +84,6 @@
                   tooltipText="Select Tool"
                   cssClass="tb-item-middle tb-item-selected"
                 ></e-item>
-                
                 <e-item
                   tooltipText="Connector Tool"
                   cssClass="tb-item-middle tb-dropdown-btn-icon"
@@ -1542,7 +1456,7 @@ import {
   ControlPointsVisibility,
   BezierSmoothness,
 } from "@syncfusion/ej2-vue-diagrams";
-import { ContextMenuComponent } from "@syncfusion/ej2-vue-navigations";
+import { ContextMenuComponent,MenuComponent } from "@syncfusion/ej2-vue-navigations";
 import {
   ColorPickerComponent,
   SliderComponent,
@@ -1564,6 +1478,7 @@ import { SelectorViewModel } from "../src/app/scripts/selector";
 import { DialogComponent } from "@syncfusion/ej2-vue-popups";
 
 let diagram;
+let menuBar
 
 export default defineComponent({
   name: "App",
@@ -1583,6 +1498,7 @@ export default defineComponent({
     "ejs-dialog": DialogComponent,
     "ejs-checkbox": CheckBoxComponent,
     "ejs-uploader": UploaderComponent,
+     "ejs-menu": MenuComponent,
   },
   setup() {
     const width = ref("100%");
@@ -2483,6 +2399,112 @@ export default defineComponent({
       isModalDialog,
       dialogPosition,
       dlgTarget,
+    
+     toolMenuItems : [
+        {
+            text: 'File',
+            items: [
+                { text: 'New', iconCss: 'sf-icon-new' }, { text: 'Open', iconCss: 'sf-icon-open' }, { separator: true },
+                { text: 'Save', iconCss: 'sf-icon-save' },
+                { text: 'Export', iconCss: 'sf-icon-export' }, { separator: true },
+                { text: 'Print', iconCss: 'sf-icon-print' }
+            ]
+        },
+        {
+            text: 'Edit',
+            items: [
+                { text: 'Undo', iconCss: 'sf-icon-undo' },
+                { text: 'Redo', iconCss: 'sf-icon-redo' },
+                { separator: true },
+                { text: 'Cut', iconCss: 'sf-icon-cut' },
+                { text: 'Copy', iconCss: 'sf-icon-copy' },
+                { text: 'Paste', iconCss: 'sf-icon-paste' },
+                { separator: true },
+                {
+                    text: 'Rotate', iconCss: 'sf-icon-rotate',
+                    items: [
+                        { text: 'Rotate Right 90', iconCss: 'sf-icon-rotate-clockwise' },
+                        { text: 'Rotate Left 90', iconCss: 'sf-icon-rotate-counter-clockwise' },
+                        { text: 'Flip Vertical', iconCss: 'sf-icon-flip-vertical' },
+                        { text: 'Flip Horizontal', iconCss: 'sf-icon-flip-horizontal' },
+                    ]
+                },
+                { text: 'Delete', iconCss: 'sf-icon-delete' },
+                { separator: true },
+                {
+                    text: 'Order Commands', iconCss: 'sf-icon-Order',
+                    items: [{ text: 'Bring Forward', iconCss: 'sf-icon-bring-forward' },
+                    { text: 'Bring To Front', iconCss: 'sf-icon-bring-to-front' },
+                    { text: 'Send Backward', iconCss: 'sf-icon-send-backward' },
+                    { text: 'Send To Back', iconCss: 'sf-icon-send-to-back' },
+                    ]
+                }
+            ]
+        },
+        {
+            text: 'Design',
+            items: [
+                {
+                    text: 'Orientation', iconCss: 'sf-icon-page_orientation',
+                    items: [
+                        { text: 'Landscape', iconCss: 'sf-icon-check-tick' },
+                        { text: 'Portrait', iconCss: '' }
+                    ]
+                },
+                {
+                text: 'Page Size', items: [
+                  { text: 'Letter (8.5 in x 11 in)', value: 'Letter', iconCss: 'sf-icon-check-tick' },
+                  { text: 'Legal (8.5 in x 14 in)', value: 'Legal' },
+                  { text: 'Tabloid (279 mm x 432 mm)', value: 'Tabloid' },
+                  { text: 'A3 (297 mm x 420 mm)', value: 'A3' },
+                  { text: 'A4 (210 mm x 297 mm)', value: 'A4' },
+                  { text: 'A5 (148 mm x 210 mm)', value: 'A5' },
+                  { text: 'A6 (105 mm x 148 mm)', value: 'A6' },
+              ]
+          },
+            ]
+        },
+        {
+            text: 'Select',
+            items: [
+                { text: 'Select All', },
+                { text: 'Select All Nodes', },
+                { text: 'Select All Connectors', },
+                { text: 'Deselect All', }
+            ]
+        },
+        {
+            text: 'Tools',
+            items: [
+                { text: 'Selection Tool', iconCss: 'sf-icon-pointer' },
+                { text: 'Pan Tool', iconCss: 'sf-icon-pan tb-icons' },
+                { separator: true },
+                {
+                    text: 'Connector Tool', iconCss: 'sf-icon-orthogonal_line',
+                    items: [
+                        { text: 'Straight', iconCss: 'sf-icon-straight_line' },
+                        { text: 'Orthogonal', iconCss: 'sf-icon-orthogonal_line' },
+                        { text: 'Bezier', iconCss: 'sf-icon-bezier' },
+                    ]
+                }
+            ]
+        },
+        {
+            text: 'View',
+            items: [
+                { text: 'Show Lines', iconCss: 'sf-icon-check-tick' },
+                { text: 'Snap To Grid', iconCss: 'sf-icon-check-tick' },
+                { text: 'Snap To Object', iconCss: 'sf-icon-check-tick' },
+                { text: 'Show Ruler', iconCss: 'sf-icon-check-tick' },
+                { text: 'Show Page Breaks', iconCss: '' },
+                { text: 'Show Multiple Page', iconCss: '' },
+                { separator: true },
+                { text: 'Fit To Width' },
+                { text: 'Fit To Page' },
+            ]
+        },
+    ]
+
     };
   },
 
@@ -2670,6 +2692,7 @@ export default defineComponent({
       diagram.print({
         region: 'Content',
         pageHeight: pageHeight,
+        multiplePage: diagram.pageSettings.multiplePage,
         pageWidth: pageWidth,
         pageOrientation: this.selectedItem.printSettings.isPortrait,
       });
@@ -2774,6 +2797,7 @@ export default defineComponent({
     // Loads diagram data from a file input.
     loadDiagram(event) {
       diagram.loadDiagram(event.target.result.toString());
+      diagram.fitToPage();
     },
     // Function to define default properties for a nodes in the diagram.
     getNodeDefaults(obj) {
@@ -3011,38 +3035,6 @@ export default defineComponent({
       document.getElementsByClassName("e-file-select-wrap")[0].children[0].click();
     },
 
-    // Adjusts diagram page settings in response to paper size changes.
-    paperListChange(args) {
-      var value = args.value || args.item.value;
-      var paperSize = this.selectedItem.utilityMethods.getPaperSize(value);
-      var pageWidth = paperSize.pageWidth;
-      var pageHeight = paperSize.pageHeight;
-      if (pageWidth && pageHeight) {
-        if (diagram.pageSettings.orientation === "Portrait") {
-          if (pageWidth > pageHeight) {
-            let temp = pageWidth;
-            pageWidth = pageHeight;
-            pageHeight = temp;
-          }
-        } else {
-          if (pageHeight > pageWidth) {
-            let temp = pageHeight;
-            pageHeight = pageWidth;
-            pageWidth = temp;
-          }
-        }
-        diagram.pageSettings.width = pageWidth;
-        diagram.pageSettings.height = pageHeight;
-      } else {
-        diagram.pageSettings.width = 1460;
-        diagram.pageSettings.height = 600;
-      }
-      let arrangeContextMenu =
-        document.getElementById("arrangeContextMenu").ej2_instances[0];
-      this.updatePaperSelection(arrangeContextMenu.items[1], args.value);
-      diagram.dataBind();
-    },
-
     // Updates the visual selection indicator for paper size menu items.
     updatePaperSelection(items, value) {
       for (let i = 0; i < items.items.length; i++) {
@@ -3109,7 +3101,30 @@ export default defineComponent({
         case "Delete":
           diagram.remove();
           break;
-
+        case 'Rotate Right 90':
+                diagram.rotate(diagram.selectedItems, 90);
+                break;
+        case 'Rotate Left 90':
+                diagram.rotate(diagram.selectedItems, -90);
+                break;
+            case 'Flip Vertical':
+                this.selectedItem.utilityMethods.flipObjects(command,diagram);
+                break;
+            case 'Flip Horizontal':
+                this.selectedItem.utilityMethods.flipObjects(command,diagram);
+                break;
+            case 'Send To Back':
+                diagram.sendToBack();
+                break;
+            case 'Bring To Front':
+                diagram.bringToFront();
+                break;
+            case 'Send Backward':
+                diagram.sendBackward();
+                break;
+            case 'Bring Forward':
+                diagram.moveForward();
+                break;
         case "Select All":
           diagram.clearSelection();
           diagram.selectAll();
@@ -3165,6 +3180,10 @@ export default defineComponent({
             this.selectedItem.pageSettings.pageBreaks = false;
           }
           break;
+        case 'Show Multiple Page':
+                args.item.iconCss = args.item.iconCss ? '' : 'sf-icon-check-tick';
+                diagram.pageSettings.multiplePage = !diagram.pageSettings.multiplePage;
+                break;
         case "Fit To Width":
           diagram.fitToPage({ mode: "Width" });
           break;
@@ -3207,7 +3226,7 @@ export default defineComponent({
         case "A5 (148 mm x 210 mm)":
         case "A6 (105 mm x 148 mm)":
         case "Tabloid (279 mm x 432 mm)":
-          this.paperListChange(args);
+          this.diagramPropertyBinding.paperListChange(args);
           this.updateSelection(args.item);
           this.selectedItem.pageSettings.paperSize = args.item.value;
           break;
@@ -3243,70 +3262,6 @@ export default defineComponent({
       }
       toolbarObj.dataBind();
     },
-
-    // Adjusts the position of the arrange context menu for proper display.
-    arrangeContextMenuOpen(args) {
-      if (args.element.classList.contains("e-menu-parent")) {
-        let popup = document.querySelector("#btnDesignMenu-popup");
-        args.element.style.left = formatUnit(
-          parseInt(args.element.style.left, 10) - parseInt(popup.style.left, 10)
-        );
-        args.element.style.top = formatUnit(
-          parseInt(args.element.style.top, 10) - parseInt(popup.style.top, 10)
-        );
-      }
-    },
-
-    // Adjusts the position of the tool context menu for proper display.
-    toolContextMenuOpen(args) {
-      if (args.element.classList.contains("e-menu-parent")) {
-        var popup = document.querySelector("#btnToolMenu-popup");
-        args.element.style.left = formatUnit(
-          parseInt(args.element.style.left, 10) - parseInt(popup.style.left, 10)
-        );
-        args.element.style.top = formatUnit(
-          parseInt(args.element.style.top, 10) - parseInt(popup.style.top, 10)
-        );
-      }
-    },
-
-    // Adjusts the position of the edit context menu for proper display.
-    editContextMenuOpen(args) {
-      if (args.element.classList.contains("e-menu-parent")) {
-        var popup = document.querySelector("#btnEditMenu-popup");
-        args.element.style.left = formatUnit(
-          parseInt(args.element.style.left, 10) - parseInt(popup.style.left, 10)
-        );
-        args.element.style.top = formatUnit(
-          parseInt(args.element.style.top, 10) - parseInt(popup.style.top, 10)
-        );
-      }
-    },
-
-    // Ensures the arrange menu remains open when interaction occurs.
-    arrangeMenuBeforeClose(args) {
-      if (
-        args.event &&
-        closest(args.event.target, ".e-dropdown-btn") !== null
-      ) {
-        args.cancel = true;
-      }
-      if (!args.element) {
-        args.cancel = true;
-      }
-    },
-
-    // Prepares the arrange menu before it opens, applying necessary styles.
-    arrangeMenuBeforeOpen(args) {
-      this.updateMenuStyle(args);
-      if (
-        args.event &&
-        closest(args.event.target, ".e-dropdown-btn") !== null
-      ) {
-        args.cancel = true;
-      }
-    },
-
     // Applies consistent stylings to menu items when the menu is updated.
     updateMenuStyle(args) {
       for (let i = 0; i < args.element.children.length; i++) {
@@ -3376,61 +3331,6 @@ export default defineComponent({
       return shortCutKey;
     },
 
-    // Enables or disables menu items based on the current application context.
-    enableMenuItems(itemText) {
-      let selectedDiagram = diagram.ej2_instances
-        ? diagram.ej2_instances[0]
-        : diagram;
-      let selectedItems = selectedDiagram.selectedItems.nodes;
-      selectedItems = selectedItems.concat(
-        selectedDiagram.selectedItems.connectors
-      );
-
-      if (itemText) {
-        var commandType = itemText.replace(/[' ']/g, "");
-        if (selectedItems.length === 0) {
-          switch (commandType.toLowerCase()) {
-            case "edittooltip":
-              return !(selectedItems.length === 1);
-            case "cut":
-            case "copy":
-            case "delete":
-              return true;
-          }
-        }
-
-        if (selectedItems.length > 1) {
-          if (commandType.toLowerCase() === "edittooltip") {
-            return true;
-          }
-        }
-
-        if (
-          !(
-            diagram.commandHandler.clipboardData.pasteIndex !== undefined &&
-            diagram.commandHandler.clipboardData.clipObject !== undefined
-          ) &&
-          itemText === "Paste"
-        ) {
-          return true;
-        }
-
-        if (
-          itemText === "Undo" &&
-          diagram.historyManager.undoStack.length === 0
-        ) {
-          return true;
-        }
-        if (
-          itemText === "Redo" &&
-          diagram.historyManager.redoStack.length === 0
-        ) {
-          return true;
-        }
-      }
-      return false;
-    },
-
     // Adjusts the zoom level of the diagram based on user interactions.
     zoomChange(args) {
       let zoomCurrentValue =
@@ -3492,25 +3392,27 @@ export default defineComponent({
         diagram.updateViewPort();
       }
     },
-    // Incorporates shortcut key information into menu items before rendering.
-    beforeItemRender(args) {
-      let shortCutText = this.getShortCutKey(args.item.text);
-      if (shortCutText) {
-        var shortCutSpan = document.createElement("span");
-        shortCutSpan.textContent = shortCutText;
-        shortCutSpan.style.pointerEvents = "none";
-        args.element.appendChild(shortCutSpan);
-        shortCutSpan.setAttribute("class", "db-shortcut");
-      }
-      let status = this.enableMenuItems(args.item.text);
-      if (status) {
-        args.element.classList.add("e-disabled");
-      } else {
-        if (args.element.classList.contains("e-disabled")) {
-          args.element.classList.remove("e-disabled");
+// enable and disable the edit menu options
+ beforeMenuOpen(args ) {
+    let parentMenu = args.parentItem;
+    if(parentMenu.text === 'Edit') {
+        let selectedItems = (diagram.selectedItems.nodes).concat(diagram.selectedItems.connectors);
+        menuBar =this.$refs.menuInstanceRef.ej2Instances;
+        if (selectedItems && selectedItems.length === 0) {
+            let disableItems = [args.items[3].text,args.items[4].text,args.items[7].text,args.items[8].text,args.items[10].text];
+            menuBar.enableItems(disableItems,false);
         }
-      }
-    },
+        if (diagram.historyManager && diagram.historyManager.undoStack.length === 0) {
+            menuBar.enableItems([args.items[0].text],false);
+        }
+        if (diagram.historyManager && diagram.historyManager.redoStack.length === 0) {
+            menuBar.enableItems([args.items[1].text],false);
+        }
+        if (diagram.commandHandler.clipboardData && !diagram.commandHandler.clipboardData.clipObject) {
+            menuBar.enableItems([args.items[5].text],false);
+        }
+    }
+},
   },
 
   provide: {
@@ -3526,3 +3428,33 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.menu-control{
+      height: 35px;
+  }
+.e-menu-wrapper .e-menu{
+margin-top: -5px!important;
+color: white !important;
+}
+.e-menu-wrapper ul .e-menu-item .e-caret, .e-menu-container ul .e-menu-item .e-caret {
+visibility: collapse !important;
+}
+.diagram-menu-control {
+text-align: left;
+}  
+#diagram-menu {
+  float: left;
+  margin-right: 0px;
+  background-color: #046AE5;
+  color:#ffffff;
+}
+
+#diagram-menu li {
+transition: color 0.2s ease; /* Smooth transition for color change */
+}
+
+#diagram-menu li:hover {
+color: #046AE5; /* Text turns blue when hovered over */
+cursor: pointer; /* Changes cursor to hand pointer on hover */
+}
+</style>

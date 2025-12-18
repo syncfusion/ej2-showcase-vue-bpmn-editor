@@ -2,7 +2,7 @@
  *  Home page handler
  */
 
-import { BpmnFlow, BpmnShapeModel, ConnectorConstraints, ConnectorModel, Diagram, DiagramBeforeMenuOpenEventArgs, DiagramGradient, DiagramTools, HorizontalAlignment, Node, NodeConstraints, NodeModel, PointModel, TextAlign, TextStyleModel, VerticalAlignment, } from '@syncfusion/ej2-diagrams';
+import { BpmnFlow, BpmnShapeModel, ConnectorConstraints, ConnectorModel, Diagram, DiagramBeforeMenuOpenEventArgs, DiagramGradient, DiagramTools, FlipDirection, HorizontalAlignment, Node, NodeConstraints, NodeModel, PointModel, TextAlign, TextStyleModel, VerticalAlignment, } from '@syncfusion/ej2-diagrams';
 import { SelectorViewModel } from './selector';
 import { DialogComponent } from '@syncfusion/ej2-vue-popups';
 import { BeforeOpenCloseMenuEventArgs, ContextMenu, MenuEventArgs, Toolbar, ToolbarComponent } from '@syncfusion/ej2-vue-navigations';
@@ -423,7 +423,8 @@ export class UtilityMethods {
     * @param pageBreak The page break setting.
     */
     public viewSelectionChange(diagram: Diagram, pageBreak: any) {
-        var items = (document.getElementById('btnViewMenu') as any).ej2_instances[0].items;
+        let viewMenu = (document.getElementById('diagram-menu') as any).ej2_instances[0];
+        var items = viewMenu.items[5].items;
         items[4].iconCss = diagram.pageSettings.showPageBreaks ? 'sf-icon-check-tick' : '';
     }
 
@@ -569,4 +570,11 @@ export class UtilityMethods {
         }
         return paperSize;
     }
+    public flipObjects(flipType: string, diagram: Diagram) {
+        var selectedObjects = (diagram as any).selectedItems.nodes.concat(diagram.selectedItems.connectors);
+        for (let i: number = 0; i < selectedObjects.length; i++) {
+            selectedObjects[i].flip ^= flipType === 'Flip Horizontal' ? FlipDirection.Horizontal : FlipDirection.Vertical;
+        }
+        diagram.dataBind();
+    };
 }

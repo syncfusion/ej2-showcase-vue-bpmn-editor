@@ -741,7 +741,7 @@ export class DiagramPropertyBinding {
      */
     public pageBreaksChange(args): void {
         let diagram: Diagram = (document.getElementById("diagram") as any).ej2_instances[0];
-        let items = ((document.getElementById("btnViewMenu") as any).ej2_instances[0]).items;
+        let items = ((document.getElementById("diagram-menu") as any).ej2_instances[0]).items[5].items;
         if (args.event) {
             (this.selectedItem as any).pageSettings.pageBreaks = args.checked;
             diagram.pageSettings.showPageBreaks = args.checked;
@@ -813,8 +813,8 @@ export class DiagramPropertyBinding {
             diagram.pageSettings.width = 1460;
             diagram.pageSettings.height = 600;
         }
-        let arrangeContextMenu = (document.getElementById('arrangeContextMenu') as any).ej2_instances[0];
-        this.updatePaperSelection(arrangeContextMenu.items[1], value);
+        let arrangeContextMenu = (document.getElementById('diagram-menu') as any).ej2_instances[0];
+        this.updatePaperSelection(arrangeContextMenu.items[2].items[1], value);
         diagram.dataBind();
     };
 
@@ -876,9 +876,9 @@ export class DiagramPropertyBinding {
     public pageOrientationChange(args: any): void {
         if (args.target) {
             var target = args.target;
-            let arrangeContextMenu = (document.getElementById('arrangeContextMenu') as any).ej2_instances[0];
+            let arrangeContextMenu = (document.getElementById('diagram-menu') as any).ej2_instances[0];
             let diagram: Diagram = (document.getElementById("diagram") as any).ej2_instances[0];
-            var items = arrangeContextMenu.items;
+            var items = arrangeContextMenu.items[2].items;
             var option = target.id ? target.id : (args.currentTarget.ej2_instances[0].iconCss === 'sf-icon-portrait' ? 'pagePortrait' : 'pageLandscape');
             switch (option) {
                 case 'pagePortrait':
